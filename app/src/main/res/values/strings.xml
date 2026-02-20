@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EcoGrid</string>
+    <string name="activity_login">LOGIN</string>
+</resources>

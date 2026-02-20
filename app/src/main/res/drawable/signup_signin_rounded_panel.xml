@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/md_theme_scrim_mediumContrast" />
+
+    <corners android:topLeftRadius="200dp"
+        android:bottomRightRadius="55dp"
+        android:bottomLeftRadius="55dp"
+        android:topRightRadius="55dp"/>
+
+
+
+</shape>
