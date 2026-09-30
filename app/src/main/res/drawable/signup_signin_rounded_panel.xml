@@ -3,11 +3,7 @@
 
     <solid android:color="@color/md_theme_scrim_mediumContrast" />
 
-    <corners android:topLeftRadius="200dp"
-        android:bottomRightRadius="55dp"
-        android:bottomLeftRadius="55dp"
+    <corners
+        android:topLeftRadius="200dp"
         android:topRightRadius="55dp"/>
-
-
-
 </shape>

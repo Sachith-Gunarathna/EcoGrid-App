@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "214665009344",
+    "project_id": "echogrid-e13a5",
+    "storage_bucket": "echogrid-e13a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214665009344:android:572efc8ea1112673a33525",
+        "android_client_info": {
+          "package_name": "lk.leadco.ecogrid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "214665009344-hh3fin1l400701ol3ng9smtefromls57.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lk.leadco.ecogrid",
+            "certificate_hash": "e1f899e670eb603ca3ddd61078bcbbd3737146f5"
+          }
+        },
+        {
+          "client_id": "214665009344-ccgab8te4uva5bdk92jou7q15qfdv81q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz-hvtDbAcr8Tx6-xzlQS_R7PKkohK1GQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "214665009344-ccgab8te4uva5bdk92jou7q15qfdv81q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
