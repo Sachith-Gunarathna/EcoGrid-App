@@ -466,7 +466,6 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
             String stationIdForCharging = tvConfirmStation.getText().toString();
             String orderIdForSession = "EcoGrid-" + System.currentTimeMillis();
 
-            // Write full session node to RTDB before launching charging screen
             DatabaseReference sessionRef = FirebaseDatabase.getInstance()
                     .getReference("stations/" + stationIdForCharging + "/current_session");
             java.util.HashMap<String, Object> sessionData = new java.util.HashMap<>();
