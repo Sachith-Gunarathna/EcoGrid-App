@@ -21,7 +21,7 @@ public class EcoGridFirebaseMessagingService extends FirebaseMessagingService {
         super.onNewToken(token);
         Log.d(TAG, "New FCM token: " + token);
 
-        // Save updated token to Firestore
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             FirebaseFirestore.getInstance()
@@ -46,7 +46,7 @@ public class EcoGridFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Message received, type: " + type);
 
         if ("admin_broadcast".equals(type)) {
-            // General notification from admin panel
+
             String title = data.get("title");
             String body  = data.get("body");
             if (title == null && message.getNotification() != null)
@@ -60,14 +60,14 @@ public class EcoGridFirebaseMessagingService extends FirebaseMessagingService {
             }
 
         } else if (data.containsKey("stationId") || data.containsKey("percentage")) {
-            // Charging complete notification
+
             String stationId  = data.getOrDefault("stationId", "EcoGrid Station");
             String percentage = data.getOrDefault("percentage", "100%");
             EcoGridNotificationHelper.showChargingCompleteNotification(
                     getApplicationContext(), stationId, percentage);
 
         } else {
-            // Fallback: use notification payload if present
+
             if (message.getNotification() != null) {
                 String title = message.getNotification().getTitle();
                 String body  = message.getNotification().getBody();

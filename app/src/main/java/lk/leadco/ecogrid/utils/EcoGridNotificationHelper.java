@@ -24,7 +24,7 @@ public class EcoGridNotificationHelper {
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Charging channel
+
         NotificationChannel chargingCh = new NotificationChannel(
                 CHANNEL_CHARGING, "Charging Alerts", NotificationManager.IMPORTANCE_HIGH);
         chargingCh.setDescription("EV charging status notifications");
@@ -33,7 +33,7 @@ public class EcoGridNotificationHelper {
         chargingCh.enableVibration(true);
         nm.createNotificationChannel(chargingCh);
 
-        // General / admin broadcast channel
+
         NotificationChannel generalCh = new NotificationChannel(
                 CHANNEL_GENERAL, "EcoGrid Updates", NotificationManager.IMPORTANCE_DEFAULT);
         generalCh.setDescription("General EcoGrid announcements and updates");
@@ -42,7 +42,6 @@ public class EcoGridNotificationHelper {
         nm.createNotificationChannel(generalCh);
     }
 
-    /** Charging complete notification (triggered by ESP/Firebase) */
     public static void showChargingCompleteNotification(Context context,
                                                         String stationName, String percentage) {
         ensureChannels(context);
@@ -66,7 +65,6 @@ public class EcoGridNotificationHelper {
         nm.notify((int) System.currentTimeMillis(), builder.build());
     }
 
-    /** General admin broadcast notification */
     public static void showGeneralNotification(Context context, String title, String body) {
         ensureChannels(context);
         NotificationManager nm = (NotificationManager)
