@@ -477,6 +477,8 @@ public class PaymentConfirmationActivity extends AppCompatActivity {
             sessionData.put("startTime", System.currentTimeMillis());
             sessionData.put("energy_kwh", 0.0);
             sessionData.put("time_left_mins", 0);
+            sessionData.put("estimated_range_km", 0);
+            sessionData.put("livePercentage", 0);
             sessionRef.updateChildren(sessionData);
 
             Intent intent = new Intent(this, ActiveChargingActivity.class);

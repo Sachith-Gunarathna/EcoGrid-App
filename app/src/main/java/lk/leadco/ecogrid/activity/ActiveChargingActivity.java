@@ -96,16 +96,13 @@ public class ActiveChargingActivity extends AppCompatActivity {
 
            if(isChargingComplete) return;
 
-           binding.tvRange.setText(estimatedRangeKm+ "KM");
+
 
            if (isChargingStarted && !isChargingComplete) {
-               hardwareRef.child("livePercentage").setValue(batteryLevel);
                hardwareRef.child("current_percent").setValue(batteryLevel);
            }
 
         }));
-
-        obdManager.startSimulation(this);
 
         startCharging();
         listenToChargingProgress();
@@ -122,12 +119,8 @@ public class ActiveChargingActivity extends AppCompatActivity {
 
         HashMap<String, Object> command = new HashMap<>();
         command.put("relay","ON");
-        command.put("status","CHARGING");
         int initialBatteryLevel = obdManager.getCurrentBatteryLevel();
-        command.put("livePercentage", initialBatteryLevel);
         command.put("current_percent", initialBatteryLevel);
-        command.put("energy_kwh", 0.0);
-        command.put("time_left_mins", 0);
         command.put("targetPercentage", String.valueOf(targetPrecent) + ".0");
         command.put("startTime", System.currentTimeMillis());
 
@@ -196,6 +189,8 @@ public class ActiveChargingActivity extends AppCompatActivity {
                     Integer timeLeft = null;
                     if (timeRaw instanceof Long) timeLeft = ((Long) timeRaw).intValue();
                     else if (timeRaw instanceof Integer) timeLeft = (Integer) timeRaw;
+                    Integer estimatedRangeKm = snapshot.child("estimated_range_km")
+                            .getValue(Integer.class);
 
                     String chargingStatus = snapshot.child("status").getValue(String.class);
 
@@ -219,6 +214,9 @@ public class ActiveChargingActivity extends AppCompatActivity {
                         binding.tvTimeLeft.setText(timeLeft + " MIN");
                     }
 
+                    if(estimatedRangeKm != null) {
+                        binding.tvRange.setText(estimatedRangeKm + "KM");
+                    }
 
                     if(!isChargingStarted || isChargingComplete) return;
 
@@ -230,11 +228,22 @@ public class ActiveChargingActivity extends AppCompatActivity {
                     if(espCompleted || targetReached){
                         Log.d("CHARGING", "Complete: espCompleted=" + espCompleted +
                                 " targetReached=" + targetReached);
+
+                        hardwareRef.child("status").setValue("COMPLETED");
+                        hardwareRef.child("relay").setValue("OFF");
+                        binding.tvStatus.setText("CHARGING COMPLETED");
+
                         handleChargingComplete();
                     } else if(relayOff){
 
                         Log.d("CHARGING", "Relay turned OFF externally - stopping");
+
+                        hardwareRef.child("status").setValue("CANCELED");
+                        hardwareRef.child("relay").setValue("OFF");
+                        binding.tvStatus.setText("CHARGING CANCELLED");
+
                         handleChargingComplete();
+
                     }
                 }
             }
@@ -253,8 +262,11 @@ public class ActiveChargingActivity extends AppCompatActivity {
         binding.btnStopCharging.setEnabled(false);
         binding.btnStopCharging.setText("OVERRIDING...");
         isChargingStarted = false;
+
         hardwareRef.child("relay").setValue("OFF");
         hardwareRef.child("status").setValue("CANCELED");
+        binding.tvStatus.setText("CHARGING CANCELLED");
+
         handleChargingComplete();
     }
 
@@ -262,15 +274,12 @@ public class ActiveChargingActivity extends AppCompatActivity {
         if(isChargingComplete) return;
         isChargingComplete = true;
 
-        hardwareRef.child("status").setValue("COMPLETED");
-        hardwareRef.child("relay").setValue("OFF");
         binding.tvStatus.clearAnimation();
         binding.tvStatus.setAlpha(1f);
 
         binding.tvStatusIcon.clearAnimation();
         binding.tvStatusIcon.setAlpha(1f);
 
-        binding.tvStatus.setText("CHARGING COMPLETED");
         binding.tvStatusIcon.setImageTintList(ColorStateList
                 .valueOf(Color.parseColor("#2196F3")));
         binding.tvStatus.setTextColor(Color.parseColor("#2196F3"));
