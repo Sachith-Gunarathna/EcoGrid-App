@@ -48,7 +48,7 @@ public class EcoGridToast extends AppCompatActivity {
         }
 
         Toast toast = new Toast(context);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.setGravity(Gravity.BOTTOM,0,100);
         toast.show();

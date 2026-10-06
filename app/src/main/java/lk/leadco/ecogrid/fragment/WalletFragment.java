@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -96,11 +97,11 @@ public class WalletFragment extends Fragment {
     private void loadInvoices(String userId) {
         db.collection("invoices")
                 .whereEqualTo("uid", userId)
-                .orderBy("date")
+                .orderBy("date", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
 
                     if (error != null) {
-                        Log.e("WALLET", "Firestore Listen failed.", error);
+                        Log.e("WALLET", "Firestore Listen failed: " + error.getMessage(), error);
                         return;
                     }
 
@@ -112,8 +113,6 @@ public class WalletFragment extends Fragment {
                             invoiceList.add(invoice);
                         }
 
-
-                        Collections.reverse(invoiceList);
                         adapter.notifyDataSetChanged();
                     } else {
                         Log.d("WALLET", "No invoices found for this user.");

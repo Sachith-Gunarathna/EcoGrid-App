@@ -2,6 +2,7 @@ package lk.leadco.ecogrid.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,9 +25,12 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.Slider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import lk.leadco.ecogrid.R;
 import lk.leadco.ecogrid.databinding.ActivityChargeSetupBinding;
+import lk.leadco.ecogrid.model.EVStation;
 import lk.leadco.ecogrid.utils.EcoGridToast;
 import lk.leadco.ecogrid.utils.SharedPrefsManager;
 
@@ -44,7 +48,7 @@ public class ChargeSetupActivity extends AppCompatActivity {
 
     private int CURRENT_BATTERY_CAPACITY ;
     private final double TOTAL_BATTERY_CAPACITY_KWH = 40.0;
-    private final double PRICE_PRE_KWH = 65.0;
+    private double PRICE_PRE_KWH = 0;
     private final double CHARGER_POWER_KW = 7.4;
 
 
@@ -55,7 +59,7 @@ public class ChargeSetupActivity extends AppCompatActivity {
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(android.graphics.Color.parseColor("#FFFFFF"));
+        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
 
         View decor = window.getDecorView();
         decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -83,6 +87,21 @@ public class ChargeSetupActivity extends AppCompatActivity {
         if(station_id != null){
             tvStationId.setText(station_id);
         }
+
+        FirebaseFirestore.getInstance().collection("Stations")
+                .whereEqualTo("basicInfo.name", station_id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            EVStation evStation = document.toObject(EVStation.class);
+                            if (evStation != null && evStation.getFinancial() != null) {
+                                PRICE_PRE_KWH = evStation.getFinancial().getPrice_pre_kwh();
+                                calculateEstimatedCost(batterySlider.getValue());
+                            }
+                        }
+                    }
+                });
 
         setupInitialUI();
         setupListeners();

@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "214665009344-pvf098l0rum62un7bgbq5kuminds2r9o.apps.googleusercontent.com",
+          "client_id": "214665009344-mo632tu62l3l6trf8ri1i7a4jp4r0shk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "lk.leadco.ecogrid",
-            "certificate_hash": "0474bb1c71257aeffb0b6e5009ea91a5d4c25df8"
+            "certificate_hash": "b9b58790f0589f94ddf854f92abff3d22427a81d"
           }
         },
         {
