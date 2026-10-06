@@ -1,6 +1,10 @@
 package lk.leadco.ecogrid.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +16,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(android.graphics.Color.parseColor("#FFFFFF"));
+        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
 
         View decor = window.getDecorView();
         decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -100,6 +106,12 @@ public class MainActivity extends AppCompatActivity
             loadFragment(new HomeFragment());
             navigationView.getMenu().findItem(R.id.side_nav_home).setChecked(true);
             bottomNavigationView.getMenu().findItem(R.id.bottom_nav_home).setChecked(true);
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
         }
 
          currentUser = firebaseAuth.getCurrentUser();
