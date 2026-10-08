@@ -65,6 +65,29 @@ public class EcoGridNotificationHelper {
         nm.notify((int) System.currentTimeMillis(), builder.build());
     }
 
+    public static void showChargingCancelledNotification(Context context,
+                                                        String stationName, String percentage) {
+        ensureChannels(context);
+        NotificationManager nm = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(context, ActiveChargingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_CHARGING)
+                .setSmallIcon(R.drawable.icons8_notification_24)
+                .setContentTitle("⚠️ Charging Cancelled")
+                .setContentText("Charging at Node " + stationName + " was cancelled. Battery is at " + percentage + "%.")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setColor(Color.parseColor("#F44336"))
+                .setContentIntent(pi);
+
+        nm.notify((int) System.currentTimeMillis(), builder.build());
+    }
+
     public static void showGeneralNotification(Context context, String title, String body) {
         ensureChannels(context);
         NotificationManager nm = (NotificationManager)

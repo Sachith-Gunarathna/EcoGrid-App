@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 import lk.leadco.ecogrid.databinding.ActivityActiveChargingBinding;
+import lk.leadco.ecogrid.utils.EcoGridNotificationHelper;
 import lk.leadco.ecogrid.utils.EcoGridToast;
 import lk.leadco.ecogrid.utils.EcoGridVirtualOBDManager;
 import lk.leadco.ecogrid.utils.SharedPrefsManager;
@@ -242,6 +243,10 @@ public class ActiveChargingActivity extends AppCompatActivity {
                         hardwareRef.child("relay").setValue("OFF");
                         binding.tvStatus.setText("CHARGING CANCELLED");
 
+                        EcoGridNotificationHelper.showChargingCancelledNotification(
+                                ActiveChargingActivity.this, stationId, String.valueOf(batteryLevel)
+                        );
+
                         handleChargingComplete();
 
                     }
@@ -266,6 +271,10 @@ public class ActiveChargingActivity extends AppCompatActivity {
         hardwareRef.child("relay").setValue("OFF");
         hardwareRef.child("status").setValue("CANCELED");
         binding.tvStatus.setText("CHARGING CANCELLED");
+
+        EcoGridNotificationHelper.showChargingCancelledNotification(
+                this, stationId, String.valueOf(batteryLevel)
+        );
 
         handleChargingComplete();
     }
