@@ -247,12 +247,12 @@ public class MainActivity extends AppCompatActivity
                                 if (user.getProfilePicUrl() != null) {
                                     Glide.with(MainActivity.this)
                                             .load(user.getProfilePicUrl())
-                                            .circleCrop()
+                                            .clone()
                                             .into(sideNavHeaderBinding.imgProfile);
 
                                     Glide.with(MainActivity.this)
                                             .load(user.getProfilePicUrl())
-                                            .circleCrop()
+                                            .clone()
                                             .into(binding.imgProfile);
                                 } else {
                                     sideNavHeaderBinding.imgProfile.setImageResource(R.drawable.icons8_user_100);

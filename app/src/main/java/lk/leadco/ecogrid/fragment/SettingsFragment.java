@@ -189,7 +189,7 @@ public class SettingsFragment extends Fragment {
                                 if (user.getProfilePicUrl() != null) {
                                     Glide.with(this)
                                             .load(user.getProfilePicUrl())
-                                            .circleCrop()
+                                            .clone()
                                             .into(binding.profilePic);
                                 } else {
                                     Glide.with(this)
