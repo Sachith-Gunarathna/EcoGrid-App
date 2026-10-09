@@ -45,45 +45,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(firebaseUser != null){
-
-            firebaseFirestore.collection("users")
-                    .document(firebaseUser.getUid())
-                    .get()
-                    .addOnSuccessListener(db ->{
-
-                        User user = db.toObject(User.class);
-
-                        binding.tvUserName.setText(user.getName());
-                        binding.tvUserEmail.setText(user.getEmail());
-
-
-                        if(user.getProfilePicUrl() != null){
-                            Glide.with(this)
-                                    .load(user.getProfilePicUrl())
-                                    .clone()
-                                    .into(binding.imgProfile);
-                        }else{
-                            Glide.with(this)
-                                    .load(R.drawable.placeholder)
-                                    .clone()
-                                    .into(binding.imgProfile);
-                        }
-
-                        if(user.getProfileBannerUrl() != null){
-                            Glide.with(this)
-                                    .load(user.getProfileBannerUrl())
-                                    .clone()
-                                    .into(binding.imgCover);
-                        }else{
-                            Glide.with(this)
-                                    .load(R.drawable.placeholder)
-                                    .clone()
-                                    .into(binding.imgCover);
-                        }
-
-                    });
-        }
+        updateProfileUI();
 
         binding.btnVehicles.setOnClickListener( v ->{
             Intent intent = new Intent(requireContext(), VehiclesActivity.class);
@@ -99,5 +61,52 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(requireContext(), TermsActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProfileUI();
+    }
+
+    private void updateProfileUI() {
+        if(firebaseUser != null){
+            firebaseFirestore.collection("users")
+                    .document(firebaseUser.getUid())
+                    .get()
+                    .addOnSuccessListener(db ->{
+                        if(db.exists()){
+                            User user = db.toObject(User.class);
+                            if(user != null){
+                                binding.tvUserName.setText(user.getName());
+                                binding.tvUserEmail.setText(user.getEmail());
+
+                                if(user.getProfilePicUrl() != null){
+                                    Glide.with(this)
+                                            .load(user.getProfilePicUrl())
+                                            .circleCrop()
+                                            .into(binding.imgProfile);
+                                }else{
+                                    Glide.with(this)
+                                            .load(R.drawable.placeholder)
+                                            .clone()
+                                            .into(binding.imgProfile);
+                                }
+
+                                if(user.getProfileBannerUrl() != null){
+                                    Glide.with(this)
+                                            .load(user.getProfileBannerUrl())
+                                            .clone()
+                                            .into(binding.imgCover);
+                                }else{
+                                    Glide.with(this)
+                                            .load(R.drawable.placeholder)
+                                            .clone()
+                                            .into(binding.imgCover);
+                                }
+                            }
+                        }
+                    });
+        }
     }
 }

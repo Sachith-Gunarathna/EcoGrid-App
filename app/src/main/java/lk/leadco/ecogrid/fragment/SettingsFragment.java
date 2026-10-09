@@ -56,38 +56,7 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        firebaseFirestore.collection("users")
-                .document(firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener( task ->{
-
-                    User user = task.toObject(User.class);
-
-                    if(user.getName() != null){
-                        binding.tvUserName.setText(user.getName());
-                    }else{
-                        binding.tvUserName.setText("User");
-                    }
-
-                    if(user.getEmail() != null){
-                        binding.tvUserEmail.setText(user.getEmail());
-                    }else{
-                        binding.tvUserEmail.setText("user@example.com");
-                    }
-
-                    if(user.getProfilePicUrl() != null){
-                        Glide.with(this)
-                                .load(user.getProfilePicUrl())
-                                .clone()
-                                .into(binding.profilePic);
-                    }else {
-                        Glide.with(this)
-                                .load(R.drawable.placeholder)
-                                .clone()
-                                .into(binding.profilePic);
-                    }
-
-                });
+        updateProfileUI();
 
         boolean isPushEnable = SharedPrefsManager.getPauseNotification(requireContext());
         binding.switchNotifications.setChecked(!isPushEnable);
@@ -188,5 +157,49 @@ public class SettingsFragment extends Fragment {
 
         Intent intent = new Intent(requireActivity(), SignInActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProfileUI();
+    }
+
+    private void updateProfileUI() {
+        if (firebaseUser != null) {
+            firebaseFirestore.collection("users")
+                    .document(firebaseUser.getUid())
+                    .get()
+                    .addOnSuccessListener(task -> {
+                        if (task.exists()) {
+                            User user = task.toObject(User.class);
+                            if (user != null) {
+                                if (user.getName() != null) {
+                                    binding.tvUserName.setText(user.getName());
+                                } else {
+                                    binding.tvUserName.setText("User");
+                                }
+
+                                if (user.getEmail() != null) {
+                                    binding.tvUserEmail.setText(user.getEmail());
+                                } else {
+                                    binding.tvUserEmail.setText("user@example.com");
+                                }
+
+                                if (user.getProfilePicUrl() != null) {
+                                    Glide.with(this)
+                                            .load(user.getProfilePicUrl())
+                                            .circleCrop()
+                                            .into(binding.profilePic);
+                                } else {
+                                    Glide.with(this)
+                                            .load(R.drawable.placeholder)
+                                            .clone()
+                                            .into(binding.profilePic);
+                                }
+                            }
+                        }
+                    });
+        }
     }
 }

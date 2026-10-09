@@ -118,49 +118,7 @@ public class MainActivity extends AppCompatActivity
 
         if(currentUser != null){
 
-            firebaseFirestore.collection("users").document(currentUser.getUid()).get()
-                            .addOnSuccessListener(ds ->{
-                                if(ds.exists()){
-
-                                    User user = ds.toObject(User.class);
-                                    sideNavHeaderBinding.headerUserEmail.setText(user.getEmail());
-                                    sideNavHeaderBinding.headerUserName.setText(user.getName());
-
-                                    binding.tvUserName.setText(user.getName());
-
-                                    if(user.getProfilePicUrl() != null){
-
-                                        Glide.with(MainActivity.this)
-                                                .load(user.getProfilePicUrl())
-                                                .clone()
-                                                .into(sideNavHeaderBinding.imgProfile);
-
-                                        Glide.with(MainActivity.this)
-                                                .load(user.getProfilePicUrl())
-                                                .clone()
-                                                .into(binding.imgProfile);
-
-                                    }else{
-                                        sideNavHeaderBinding.imgProfile.
-                                                setImageResource(R.drawable.icons8_user_100);
-                                        binding.imgProfile.setImageResource(R.drawable.icons8_user_100);
-                                    }
-
-                                    if(user.getProfileBannerUrl() != null){
-                                        Glide.with(MainActivity.this)
-                                                .load(user.getProfileBannerUrl())
-                                                .clone()
-                                                .into(sideNavHeaderBinding.bannerImage);
-
-                                    }else{
-                                        Glide.with(MainActivity.this)
-                                                .load(R.drawable.placeholder)
-                                                .clone()
-                                                .into(sideNavHeaderBinding.bannerImage);
-                                    }
-
-                                }
-                            });
+            updateUserProfileUI();
 
             FirebaseMessaging.getInstance().getToken().addOnCompleteListener( task ->{
 
@@ -269,4 +227,52 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUserProfileUI();
+    }
+
+    private void updateUserProfileUI() {
+        if (currentUser != null) {
+            firebaseFirestore.collection("users").document(currentUser.getUid()).get()
+                    .addOnSuccessListener(ds -> {
+                        if (ds.exists()) {
+                            User user = ds.toObject(User.class);
+                            if (user != null) {
+                                sideNavHeaderBinding.headerUserEmail.setText(user.getEmail());
+                                sideNavHeaderBinding.headerUserName.setText(user.getName());
+                                binding.tvUserName.setText(user.getName());
+
+                                if (user.getProfilePicUrl() != null) {
+                                    Glide.with(MainActivity.this)
+                                            .load(user.getProfilePicUrl())
+                                            .circleCrop()
+                                            .into(sideNavHeaderBinding.imgProfile);
+
+                                    Glide.with(MainActivity.this)
+                                            .load(user.getProfilePicUrl())
+                                            .circleCrop()
+                                            .into(binding.imgProfile);
+                                } else {
+                                    sideNavHeaderBinding.imgProfile.setImageResource(R.drawable.icons8_user_100);
+                                    binding.imgProfile.setImageResource(R.drawable.icons8_user_100);
+                                }
+
+                                if (user.getProfileBannerUrl() != null) {
+                                    Glide.with(MainActivity.this)
+                                            .load(user.getProfileBannerUrl())
+                                            .clone()
+                                            .into(sideNavHeaderBinding.bannerImage);
+                                } else {
+                                    Glide.with(MainActivity.this)
+                                            .load(R.drawable.placeholder)
+                                            .clone()
+                                            .into(sideNavHeaderBinding.bannerImage);
+                                }
+                            }
+                        }
+                    });
+        }
+    }
 }
